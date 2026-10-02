@@ -1,0 +1,756 @@
+/* ==========================================================
+   CSS Animation Lab
+   1. Base & layout
+   2. Pacman
+   3. Bouncing ball
+   4. Solar system
+   5. Morphing blob
+   6. Hover playground
+   7. Loading spinners
+   8. Day & night
+   ========================================================== */
+
+/* ---------- 1. BASE & LAYOUT ---------- */
+:root {
+  --sky: #0084a5;
+  --ground: #4a7c63;
+  --ink: #222;
+  --paper: #efefef;
+  --frame-line: #e0474c;
+  --scene-h: 300px;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  background: #fff;
+  color: #2b2f36;
+}
+
+.page-header {
+  text-align: center;
+  padding: 36px 16px 8px;
+}
+.page-header h1 {
+  margin: 0 0 6px;
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  letter-spacing: .5px;
+}
+.page-header p { margin: 0; color: #6b7280; }
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 380px));
+  justify-content: center;
+  gap: 24px;
+  padding: 24px 20px 40px;
+}
+
+/* the thin red frame used in the reference screenshot */
+.frame {
+  margin: 0;
+  padding: 12px 12px 6px;
+  border: 1px solid var(--frame-line);
+  background: #fff;
+}
+
+.frame__title {
+  margin: 0;
+  padding: 12px 0 8px;
+  text-align: center;
+  font-size: .95rem;
+  font-weight: 600;
+  color: #444;
+}
+.frame__title small {
+  display: block;
+  font-size: .72rem;
+  font-weight: 400;
+  color: #888;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+}
+
+.scene {
+  position: relative;
+  height: var(--scene-h);
+  overflow: hidden;
+  border-radius: 3px;
+  box-shadow: 3px 3px 12px rgba(0, 0, 0, .18);
+}
+
+.scene--sky { background: var(--sky); }
+
+.ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 35%;
+  background: var(--ground);
+}
+
+.page-footer {
+  text-align: center;
+  padding: 0 16px 28px;
+  color: #9aa0a8;
+  font-size: .85rem;
+}
+
+/* ---------- 2. PACMAN ---------- */
+/* Pacman stays in place: only the two halves rotate (mouth)
+   and the dot strip scrolls toward the mouth. */
+.pacman {
+  position: absolute;
+  left: 50%;
+  bottom: 35%;
+  width: 80px;
+  height: 80px;
+  margin-left: -40px;
+}
+
+.pacman__half {
+  position: absolute;
+  left: 0;
+  width: 80px;
+  height: 40px;
+  background: var(--paper);
+}
+.pacman__half--top {
+  top: 0;
+  border-radius: 80px 80px 0 0;
+  transform-origin: 50% 100%;
+  animation: chomp-top .7s ease-in-out infinite;
+}
+.pacman__half--bottom {
+  top: 40px;
+  border-radius: 0 0 80px 80px;
+  transform-origin: 50% 0;
+  animation: chomp-bottom .7s ease-in-out infinite;
+}
+
+/* the eye */
+.pacman__half--top::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 38px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+@keyframes chomp-top {
+  0%, 100% { transform: rotate(-32deg); }
+  50%      { transform: rotate(0deg); }
+}
+@keyframes chomp-bottom {
+  0%, 100% { transform: rotate(32deg); }
+  50%      { transform: rotate(0deg); }
+}
+
+/* the dots: one repeating radial-gradient strip that scrolls */
+.dots {
+  position: absolute;
+  left: calc(50% + 40px);   /* starts at the lips of Pacman */
+  right: 0;
+  bottom: calc(35% + 35px); /* level with the middle of the mouth */
+  height: 10px;
+  background:
+    radial-gradient(circle at 20px 5px, var(--ink) 5px, transparent 5.6px)
+    0 0 / 40px 10px repeat-x;
+  animation: dots-flow 1s linear infinite;
+}
+
+@keyframes dots-flow {
+  from { background-position-x: 0; }
+  to   { background-position-x: -40px; }
+}
+
+/* ---------- 3. BOUNCING BALL ---------- */
+/* .ball-lane crosses the scene right -> left (linear, moderate speed).
+   .ball bounces; each bounce is lower than the one before.
+   Both use the same duration so they stay in sync and the loop is seamless. */
+.ball-lane {
+  position: absolute;
+  top: 0;
+  bottom: 35%;
+  left: -40px;
+  width: calc(100% + 80px);
+  animation: ball-travel 8s linear infinite;
+}
+
+.ball,
+.ball-shadow {
+  position: absolute;
+  right: 0;
+}
+
+.ball {
+  bottom: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--paper);
+  animation: ball-bounce 8s infinite;
+}
+
+.ball-shadow {
+  bottom: -5px;
+  width: 40px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .22);
+  animation: ball-shadow 8s infinite;
+}
+
+@keyframes ball-travel {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+
+/* falling = ease-in (accelerate), rising = ease-out (decelerate) */
+@keyframes ball-bounce {
+  0%     { transform: translateY(-130px) scale(1, 1); animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  13.9%  { transform: translateY(0)      scale(1.12, .88); animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+  26.1%  { transform: translateY(-100px) scale(1, 1); animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  38.3%  { transform: translateY(0)      scale(1.1, .9);  animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+  48.5%  { transform: translateY(-70px)  scale(1, 1); animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  58.7%  { transform: translateY(0)      scale(1.08, .92); animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+  66.9%  { transform: translateY(-45px)  scale(1, 1); animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  75.1%  { transform: translateY(0)      scale(1.06, .94); animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+  81.2%  { transform: translateY(-25px)  scale(1, 1); animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  87.3%  { transform: translateY(0)      scale(1.04, .96); animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+  91.2%  { transform: translateY(-10px)  scale(1, 1); animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  95.1%  { transform: translateY(0)      scale(1, 1); animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+  97.5%  { transform: translateY(-4px)   scale(1, 1); animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  100%   { transform: translateY(0)      scale(1, 1); }
+}
+
+/* shadow shrinks and fades as the ball rises */
+@keyframes ball-shadow {
+  0%     { transform: scaleX(.35); opacity: .08; animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  13.9%  { transform: scaleX(1);   opacity: .25; animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+  26.1%  { transform: scaleX(.4);  opacity: .1;  animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  38.3%  { transform: scaleX(1);   opacity: .25; animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+  48.5%  { transform: scaleX(.5);  opacity: .14; animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  58.7%  { transform: scaleX(1);   opacity: .25; animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+  66.9%  { transform: scaleX(.65); opacity: .18; animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  75.1%  { transform: scaleX(1);   opacity: .25; animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+  81.2%  { transform: scaleX(.8);  opacity: .21; animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  87.3%  { transform: scaleX(1);   opacity: .25; animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+  91.2%  { transform: scaleX(.92); opacity: .23; animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  95.1%  { transform: scaleX(1);   opacity: .25; animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+  97.5%  { transform: scaleX(.97); opacity: .24; animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  100%   { transform: scaleX(1);   opacity: .25; }
+}
+
+/* ---------- 4. SOLAR SYSTEM (rotation) ---------- */
+.scene--space {
+  background: radial-gradient(circle at 50% 50%, #1b1f4b 0%, #0a0c24 60%, #05060f 100%);
+}
+
+.stars {
+  position: absolute;
+  top: 24px;
+  left: 30px;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    210px 20px #fff, 90px 70px #cfe3ff, 250px 120px #fff, 30px 150px #ffe9c4,
+    160px 200px #fff, 230px 255px #cfe3ff, 60px 240px #fff, 120px 15px #ffe9c4,
+    280px 60px #fff, 15px 90px #cfe3ff, 195px 160px #fff;
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .25; }
+}
+
+.solar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+}
+
+.sun {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff3a0, #ffb400 55%, #ff7a00);
+  box-shadow: 0 0 25px 8px rgba(255, 170, 0, .55);
+  animation: sun-pulse 3s ease-in-out infinite;
+}
+
+@keyframes sun-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.12); }
+}
+
+.orbit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px dashed rgba(255, 255, 255, .22);
+  border-radius: 50%;
+  animation: spin linear infinite;
+}
+.orbit--1 { width: 100px; height: 100px; margin: -50px 0 0 -50px; animation-duration: 5s; }
+.orbit--2 { width: 164px; height: 164px; margin: -82px 0 0 -82px; animation-duration: 11s; }
+.orbit--3 { width: 232px; height: 232px; margin: -116px 0 0 -116px; animation-duration: 19s; animation-direction: reverse; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.planet {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-radius: 50%;
+}
+.planet--1 { width: 12px; height: 12px; margin: -6px 0 0 -6px; background: #c9b79c; }
+.planet--2 {
+  width: 18px; height: 18px; margin: -9px 0 0 -9px;
+  background: radial-gradient(circle at 35% 35%, #7fd1ff, #1c6bd6 60%, #0d3d8a);
+}
+.planet--3 {
+  width: 16px; height: 16px; margin: -8px 0 0 -8px;
+  background: radial-gradient(circle at 35% 35%, #ffb18a, #e0522d 60%, #8f2a12);
+}
+
+.moon-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  animation: spin 2s linear infinite;
+}
+.moon {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: #ddd;
+}
+
+/* ---------- 5. MORPHING BLOB (morph + scale) ---------- */
+.scene--morph {
+  background: linear-gradient(160deg, #1d1033 0%, #2b1055 55%, #3a1c71 100%);
+}
+
+.blob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+}
+.blob--front {
+  background: linear-gradient(135deg, #ff6ec4, #7873f5 55%, #4adede);
+  box-shadow: 0 0 40px rgba(255, 110, 196, .45);
+  animation:
+    morph 8s ease-in-out infinite,
+    hue 10s linear infinite;
+}
+.blob--back {
+  width: 190px;
+  height: 190px;
+  margin: -95px 0 0 -95px;
+  background: rgba(120, 115, 245, .28);
+  filter: blur(14px);
+  animation: morph 8s ease-in-out infinite reverse;
+}
+
+@keyframes morph {
+  0%   { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(0deg)   scale(1); }
+  25%  { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; transform: rotate(90deg)  scale(1.12); }
+  50%  { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; transform: rotate(180deg) scale(.92); }
+  75%  { border-radius: 70% 30% 50% 50% / 30% 60% 40% 70%; transform: rotate(270deg) scale(1.1); }
+  100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(360deg) scale(1); }
+}
+@keyframes hue {
+  to { filter: hue-rotate(360deg); }
+}
+
+.spark {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  animation: spark 4s ease-in-out infinite;
+}
+.spark--1 { top: 18%; left: 20%; }
+.spark--2 { top: 70%; left: 78%; animation-delay: 1.3s; }
+.spark--3 { top: 24%; left: 80%; animation-delay: 2.6s; }
+
+@keyframes spark {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50%      { opacity: .9; transform: scale(1.4); }
+}
+
+/* ---------- 6. HOVER PLAYGROUND (transitions) ---------- */
+.scene--hover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  background: linear-gradient(135deg, #0f2027, #203a43 55%, #2c5364);
+}
+
+.hover-hint {
+  margin: 0;
+  color: #9fc3d1;
+  font-size: .85rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  animation: hint 2s ease-in-out infinite;
+}
+@keyframes hint {
+  0%, 100% { opacity: .5; }
+  50%      { opacity: 1; }
+}
+
+.tiles {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.tile {
+  width: 82px;
+  height: 100px;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+}
+
+/* flip (3D) */
+.tile--flip { perspective: 500px; }
+.tile__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .7s cubic-bezier(.4, .2, .2, 1);
+}
+.tile--flip:hover .tile__inner,
+.tile--flip:focus-visible .tile__inner { transform: rotateY(180deg); }
+
+.tile__face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  backface-visibility: hidden;
+}
+.tile__face--front { background: linear-gradient(135deg, #ff9966, #ff5e62); }
+.tile__face--back  { background: linear-gradient(135deg, #36d1dc, #5b86e5); transform: rotateY(180deg); }
+
+/* skew + sliding colour */
+.tile--skew {
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(120deg, #7f7fd5 0%, #86a8e7 40%, #91eae4 60%, #7f7fd5 100%);
+  background-size: 250% 100%;
+  background-position: 0 0;
+  transition: transform .45s ease, background-position .6s ease, box-shadow .45s ease;
+}
+.tile--skew span { transition: transform .45s ease; }
+.tile--skew:hover,
+.tile--skew:focus-visible {
+  transform: skewX(-14deg) scale(1.1);
+  background-position: 100% 0;
+  box-shadow: 8px 10px 18px rgba(0, 0, 0, .35);
+}
+.tile--skew:hover span,
+.tile--skew:focus-visible span { transform: skewX(14deg); }
+
+/* spin + shape change */
+.tile--spin {
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f7971e, #ffd200);
+  color: #5a3a00;
+  transition: transform .7s cubic-bezier(.3, 1.4, .5, 1), border-radius .7s ease, background .7s ease;
+}
+.tile--spin:hover,
+.tile--spin:focus-visible {
+  transform: rotate(360deg) scale(1.12);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a8ff78, #78ffd6);
+}
+
+/* ---------- 7. LOADING SPINNERS (sequential loops) ---------- */
+.scene--loaders {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  background: linear-gradient(135deg, #141e30, #243b55);
+}
+.loader-cell {
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .06);
+}
+
+/* a) ring */
+.ring {
+  width: 54px;
+  height: 54px;
+  border: 5px solid rgba(255, 255, 255, .15);
+  border-top-color: #4adede;
+  border-right-color: #7873f5;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* b) chasing dots */
+.orbit-dots {
+  position: relative;
+  width: 56px;
+  height: 56px;
+}
+.orbit-dots i {
+  position: absolute;
+  inset: 0;
+  animation: spin 1.5s cubic-bezier(.5, .1, .5, .9) infinite;
+}
+.orbit-dots i::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: #ff6ec4;
+}
+.orbit-dots i:nth-child(1) { animation-delay: 0s; }
+.orbit-dots i:nth-child(2) { animation-delay: .1s; }
+.orbit-dots i:nth-child(3) { animation-delay: .2s; }
+.orbit-dots i:nth-child(4) { animation-delay: .3s; }
+.orbit-dots i:nth-child(5) { animation-delay: .4s; }
+.orbit-dots i:nth-child(6) { animation-delay: .5s; }
+.orbit-dots i:nth-child(1)::before { opacity: 1; }
+.orbit-dots i:nth-child(2)::before { opacity: .8; }
+.orbit-dots i:nth-child(3)::before { opacity: .6; }
+.orbit-dots i:nth-child(4)::before { opacity: .45; }
+.orbit-dots i:nth-child(5)::before { opacity: .3; }
+.orbit-dots i:nth-child(6)::before { opacity: .15; }
+
+/* c) equalizer bars */
+.bars {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 56px;
+}
+.bars i {
+  width: 7px;
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(#ffd200, #f7971e);
+  transform-origin: center;
+  animation: eq 1s ease-in-out infinite;
+}
+.bars i:nth-child(2) { animation-delay: .12s; }
+.bars i:nth-child(3) { animation-delay: .24s; }
+.bars i:nth-child(4) { animation-delay: .36s; }
+.bars i:nth-child(5) { animation-delay: .48s; }
+@keyframes eq {
+  0%, 100% { transform: scaleY(.25); }
+  50%      { transform: scaleY(1); }
+}
+
+/* d) ripple */
+.ripple {
+  position: relative;
+  width: 56px;
+  height: 56px;
+}
+.ripple i {
+  position: absolute;
+  inset: 0;
+  border: 3px solid #78ffd6;
+  border-radius: 50%;
+  opacity: 0;
+  animation: ripple 1.8s ease-out infinite;
+}
+.ripple i:nth-child(2) { animation-delay: .9s; }
+@keyframes ripple {
+  0%   { transform: scale(.1); opacity: 1; }
+  100% { transform: scale(1);  opacity: 0; }
+}
+
+/* ---------- 8. DAY & NIGHT (moving objects) ---------- */
+.scene--day {
+  background: linear-gradient(#4aa8f0 0%, #9fd8ff 70%, #d8f1ff 100%);
+}
+
+/* warm sunrise / sunset glow */
+.scene--day::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#ff7e5f 0%, #feb47b 55%, #ffe3b0 100%);
+  opacity: 0;
+  animation: glow 20s linear infinite;
+}
+@keyframes glow {
+  0%   { opacity: 0; }
+  12%  { opacity: 0; }
+  22%  { opacity: .85; }
+  30%  { opacity: 0; }
+  70%  { opacity: 0; }
+  78%  { opacity: .85; }
+  88%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* night sky layer */
+.night {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#050818 0%, #0d1b3e 60%, #1b2d5c 100%);
+  opacity: 0;
+  animation: night 20s linear infinite;
+}
+@keyframes night {
+  0%   { opacity: 0; }
+  20%  { opacity: 0; }
+  32%  { opacity: 1; }
+  68%  { opacity: 1; }
+  80%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 6px 1px rgba(255, 255, 255, .8);
+  animation: twinkle 2s ease-in-out infinite;
+}
+.star--1 { top: 12%; left: 14%; }
+.star--2 { top: 24%; left: 38%; animation-delay: .5s; }
+.star--3 { top: 10%; left: 62%; animation-delay: 1s; }
+.star--4 { top: 30%; left: 82%; animation-delay: 1.5s; }
+.star--5 { top: 42%; left: 22%; animation-delay: .8s; }
+.star--6 { top: 38%; left: 70%; animation-delay: .3s; }
+
+/* sun and moon sit on opposite ends of one rotating wheel */
+.rotator {
+  position: absolute;
+  left: 50%;
+  bottom: -220px;
+  width: 440px;
+  height: 440px;
+  margin-left: -220px;
+  animation: spin 20s linear infinite;
+}
+.sun-disc,
+.moon-disc {
+  position: absolute;
+  left: 50%;
+  width: 46px;
+  height: 46px;
+  margin-left: -23px;
+  border-radius: 50%;
+}
+.sun-disc {
+  top: 20px;
+  background: radial-gradient(circle at 40% 40%, #fffbd0, #ffd93b 60%, #ffb300);
+  box-shadow: 0 0 30px 12px rgba(255, 210, 60, .6);
+}
+.moon-disc {
+  bottom: 20px;
+  background: radial-gradient(circle at 35% 35%, #ffffff, #dfe6f0 60%, #b9c4d6);
+  box-shadow: 0 0 22px 6px rgba(220, 230, 255, .45);
+}
+
+/* clouds drift across and fade at night */
+.cloud {
+  position: absolute;
+  width: 70px;
+  height: 22px;
+  border-radius: 22px;
+  background: #fff;
+  animation:
+    drift 26s linear infinite,
+    cloud-dim 20s linear infinite;
+}
+.cloud::before,
+.cloud::after {
+  content: "";
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+.cloud::before { width: 34px; height: 34px; top: -16px; left: 10px; }
+.cloud::after  { width: 26px; height: 26px; top: -10px; left: 36px; }
+.cloud--1 { top: 22%; left: -90px; }
+.cloud--2 { top: 40%; left: -90px; transform: scale(.7); animation-delay: -13s, 0s; }
+
+@keyframes drift {
+  from { translate: 0 0; }
+  to   { translate: 520px 0; }
+}
+@keyframes cloud-dim {
+  0%   { opacity: 1; }
+  18%  { opacity: 1; }
+  32%  { opacity: .12; }
+  68%  { opacity: .12; }
+  80%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+.hills {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 36%;
+  animation: hills-dim 20s linear infinite;
+}
+@keyframes hills-dim {
+  0%   { filter: brightness(1); }
+  18%  { filter: brightness(1); }
+  32%  { filter: brightness(.4); }
+  68%  { filter: brightness(.4); }
+  80%  { filter: brightness(1); }
+  100% { filter: brightness(1); }
+}
+.hill {
+  position: absolute;
+  bottom: -40%;
+  border-radius: 50%;
+}
+.hill--back  { left: -20%; width: 90%;  height: 140%; background: #5f9a73; }
+.hill--front { right: -25%; width: 110%; height: 120%; background: #4a7c63; }

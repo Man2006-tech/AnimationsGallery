@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animations Gallery</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+
+  <header class="page-header">
+    <h1><span>Animation Gallery</span></h1>
+  </header>
+
+  <main class="gallery">
+
+    <!-- 1. PACMAN (mandatory) -->
+    <section class="frame" aria-labelledby="t-pacman">
+      <div class="scene scene--sky">
+        <div class="ground"></div>
+        <div class="pacman" role="img" aria-label="Pacman opening and closing its mouth">
+          <span class="pacman__half pacman__half--top"></span>
+          <span class="pacman__half pacman__half--bottom"></span>
+        </div>
+        <div class="dots" aria-hidden="true"></div>
+      </div>
+      <h2 id="t-pacman" class="frame__title">1. Pacman</h2>
+    </section>
+
+    <!-- 2. BOUNCING BALL (mandatory) -->
+    <section class="frame" aria-labelledby="t-ball">
+      <div class="scene scene--sky">
+        <div class="ground"></div>
+        <div class="ball-lane" role="img" aria-label="A ball bouncing from right to left">
+          <span class="ball-shadow"></span>
+          <span class="ball"></span>
+        </div>
+      </div>
+      <h2 id="t-ball" class="frame__title">2. Bouncing Ball</h2>
+    </section>
+
+    <!-- 3. SOLAR SYSTEM (rotation) -->
+    <section class="frame" aria-labelledby="t-solar">
+      <div class="scene scene--space">
+        <div class="stars" aria-hidden="true"></div>
+        <div class="solar" role="img" aria-label="Planets orbiting a sun">
+          <div class="sun"></div>
+          <div class="orbit orbit--1"><span class="planet planet--1"></span></div>
+          <div class="orbit orbit--2">
+            <span class="planet planet--2">
+              <span class="moon-orbit"><span class="moon"></span></span>
+            </span>
+          </div>
+          <div class="orbit orbit--3"><span class="planet planet--3"></span></div>
+        </div>
+      </div>
+      <h2 id="t-solar" class="frame__title">3. Solar System</h2>
+    </section>
+
+    <!-- 4. MORPHING BLOB (morph + scale) -->
+    <section class="frame" aria-labelledby="t-morph">
+      <div class="scene scene--morph">
+        <div class="blob blob--back" aria-hidden="true"></div>
+        <div class="blob blob--front" role="img" aria-label="A blob of colour that morphs shape"></div>
+        <span class="spark spark--1" aria-hidden="true"></span>
+        <span class="spark spark--2" aria-hidden="true"></span>
+        <span class="spark spark--3" aria-hidden="true"></span>
+      </div>
+      <h2 id="t-morph" class="frame__title">4. Morphing Blob</h2>
+    </section>
+
+    <!-- 5. HOVER PLAYGROUND (transitions on hover) -->
+    <section class="frame" aria-labelledby="t-hover">
+      <div class="scene scene--hover">
+        <p class="hover-hint">Hover over the tiles</p>
+        <div class="tiles">
+          <div class="tile tile--flip" tabindex="0">
+            <div class="tile__inner">
+              <div class="tile__face tile__face--front">Flip</div>
+              <div class="tile__face tile__face--back">Hello!</div>
+            </div>
+          </div>
+          <div class="tile tile--skew" tabindex="0"><span>Skew</span></div>
+          <div class="tile tile--spin" tabindex="0"><span>Spin</span></div>
+        </div>
+      </div>
+      <h2 id="t-hover" class="frame__title">5. Hover Playground</h2>
+    </section>
+
+    <!-- 6. LOADERS (sequential / looping) -->
+    <section class="frame" aria-labelledby="t-load">
+      <div class="scene scene--loaders">
+        <div class="loader-cell"><div class="ring" role="img" aria-label="Ring loader"></div></div>
+        <div class="loader-cell">
+          <div class="orbit-dots" role="img" aria-label="Orbiting dots loader">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+        <div class="loader-cell">
+          <div class="bars" role="img" aria-label="Equalizer loader">
+            <i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+        <div class="loader-cell"><div class="ripple" role="img" aria-label="Ripple loader"><i></i><i></i></div></div>
+      </div>
+      <h2 id="t-load" class="frame__title">6. Loading Spinners</h2>
+    </section>
+
+    <!-- 7. DAY / NIGHT (moving objects) -->
+    <section class="frame" aria-labelledby="t-day">
+      <div class="scene scene--day">
+        <div class="night" aria-hidden="true">
+          <span class="star star--1"></span><span class="star star--2"></span>
+          <span class="star star--3"></span><span class="star star--4"></span>
+          <span class="star star--5"></span><span class="star star--6"></span>
+        </div>
+        <div class="cloud cloud--1" aria-hidden="true"></div>
+        <div class="cloud cloud--2" aria-hidden="true"></div>
+        <div class="rotator" role="img" aria-label="Sun and moon crossing the sky">
+          <span class="sun-disc"></span>
+          <span class="moon-disc"></span>
+        </div>
+        <div class="hills" aria-hidden="true">
+          <span class="hill hill--back"></span>
+          <span class="hill hill--front"></span>
+        </div>
+      </div>
+      <h2 id="t-day" class="frame__title">7. Day &amp; Night</h2>
+    </section>
+
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="home-button" href="index.html">
+      <svg class="home-button__arrow" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+        <path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Return to Home Page</span>
+    </a>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,146 @@
+/* ==========================================================
+   Animations Gallery page (animations.html) - styling only.
+   Loaded AFTER styles.css. It never touches the animation
+   rules, scene sizes, or the width/height/padding/border-width
+   of the frames: it only adds colour, glow and page decoration.
+   ========================================================== */
+
+:root {
+  --g-navy: #0b2a5b;
+  --g-navy-deep: #071b3d;
+}
+
+/* ---------- page background ---------- */
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 8% 6%,  rgba(255, 140, 190, .38), transparent 36%),
+    radial-gradient(circle at 94% 14%, rgba(110, 190, 255, .42), transparent 38%),
+    radial-gradient(circle at 12% 62%, rgba(255, 215, 110, .32), transparent 36%),
+    radial-gradient(circle at 90% 78%, rgba(150, 235, 190, .38), transparent 38%),
+    linear-gradient(135deg, #e6f2ff 0%, #eee8fb 50%, #fdebf3 100%);
+  background-attachment: fixed;
+}
+
+/* ---------- animated title in a frame ---------- */
+.page-header { padding: 44px 16px 10px; }
+
+.page-header h1 {
+  display: inline-block;
+  margin: 0;
+  padding: 16px 40px;
+  border: 4px solid transparent;
+  border-radius: 20px;
+  /* white inside, rainbow border that slowly flows */
+  background:
+    linear-gradient(#ffffff, #fff8fd) padding-box,
+    linear-gradient(90deg, #ff4f87, #ffb020, #35c46b, #2aa9ff, #8a5cff, #ff4f87) border-box;
+  background-size: 100% 100%, 300% 100%;
+  box-shadow: 0 10px 28px rgba(80, 60, 160, .22);
+  cursor: default;
+  animation: border-flow 6s linear infinite;
+  transition: box-shadow .3s ease, transform .3s ease;
+}
+
+.page-header h1 span {
+  display: inline-block;
+  font-size: clamp(1.9rem, 5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #ff4f87, #ff9a1f, #2fbf6b, #1fa2ff, #8a5cff, #ff4f87);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-flow 5s linear infinite;
+  transition: letter-spacing .3s ease;
+}
+
+@keyframes border-flow { to { background-position: 0 0, 300% 0; } }
+@keyframes text-flow   { to { background-position: 300% 0; } }
+
+/* mouse over: shake left-right, get bolder, glow */
+.page-header h1:hover {
+  box-shadow: 0 14px 36px rgba(138, 92, 255, .42);
+  animation:
+    border-flow 6s linear infinite,
+    wiggle .7s ease-in-out;
+}
+.page-header h1:hover span {
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+@keyframes wiggle {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  15%      { translate: -12px 0; rotate: -1.5deg; }
+  35%      { translate: 12px 0;  rotate: 1.5deg; }
+  55%      { translate: -8px 0;  rotate: -1deg; }
+  75%      { translate: 8px 0;   rotate: 1deg; }
+}
+
+/* ---------- coloured frames (size is unchanged) ---------- */
+.gallery .frame {
+  --accent: #0084a5;
+  border-color: var(--accent);
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--accent) 7%, #fff) 0%,
+    color-mix(in srgb, var(--accent) 22%, #fff) 100%);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent),
+    0 12px 26px color-mix(in srgb, var(--accent) 30%, transparent);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.gallery .frame:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--accent) 45%, transparent),
+    0 18px 34px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.gallery .frame .frame__title {
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: .4px;
+}
+
+/* one accent per animation, matched to its scene colours */
+.gallery .frame:nth-child(1) { --accent: #0084a5; } /* pacman: teal sky       */
+.gallery .frame:nth-child(2) { --accent: #3f8f62; } /* ball: green ground     */
+.gallery .frame:nth-child(3) { --accent: #4b4fc4; } /* solar: deep indigo     */
+.gallery .frame:nth-child(4) { --accent: #b445c9; } /* blob: magenta-violet   */
+.gallery .frame:nth-child(5) { --accent: #1f7f94; } /* hover: cyan-slate      */
+.gallery .frame:nth-child(6) { --accent: #e08a0b; } /* loaders: amber         */
+.gallery .frame:nth-child(7) { --accent: #2b8fe0; } /* day/night: sky blue    */
+
+/* ---------- return-to-home button ---------- */
+.gallery-footer {
+  padding: 4px 16px 56px;
+  text-align: center;
+}
+
+.home-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 34px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: .5px;
+  color: #fff;
+  background: linear-gradient(90deg, var(--g-navy-deep), var(--g-navy) 45%, #5a3fc0);
+  box-shadow: 0 10px 24px rgba(11, 42, 91, .38);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.home-button:hover,
+.home-button:focus-visible {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 16px 32px rgba(90, 63, 192, .5);
+  outline: none;
+}
+.home-button:active { transform: translateY(0) scale(.98); }
+.home-button__arrow { transition: transform .25s ease; }
+.home-button:hover .home-button__arrow,
+.home-button:focus-visible .home-button__arrow { transform: translateX(-7px); }

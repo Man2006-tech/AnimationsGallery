@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab 4 &ndash; CSS Animation Widgets | Web Engineering</title>
+  <link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+  <div class="sheet">
+
+    <!-- University & school name -->
+    <header class="uni-banner">
+      <span class="uni-banner__bar" aria-hidden="true"></span>
+      <div class="uni-banner__text">
+        <h1 class="uni-name">National University of Sciences &amp; Technology</h1>
+        <p class="school-name">School of Electrical Engineering &amp; Computer Sciences</p>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- Lab title + date ribbon -->
+      <section class="lab-heading" aria-label="Lab title">
+        <div class="ribbon"><time datetime="2026-10-01">1/10/2026</time></div>
+        <div class="lab-heading__title">
+          <h2>Lab_04</h2>
+          <p>Web Engineering</p> 
+        </div>
+      </section>
+
+      <!-- Course details -->
+      <section class="card course" aria-labelledby="lab-topic">
+        <p class="eyebrow">Faculty of Computing</p>
+        <h2 id="lab-topic" class="lab-topic">Lab 4: CSS &ndash; Animation Widgets</h2>
+
+        <dl class="info-grid">
+          <div class="info info--blue">
+            <dt>Course</dt>
+            <dd>SE-344: Web Engineering</dd>
+          </div>
+          <div class="info info--teal">
+            <dt>Class</dt>
+            <dd>BESE 15-B</dd>
+          </div>
+          <div class="info info--gold">
+            <dt>Date</dt>
+            <dd>24<sup>th</sup> Sep 2026</dd>
+          </div>
+          <div class="info info--rose">
+            <dt>Time</dt>
+            <dd>02:00 PM &ndash; 04:50 PM</dd>
+          </div>
+          <div class="info info--violet">
+            <dt>Instructor</dt>
+            <dd>Dr Muhammad Khuram Shahzad</dd>
+          </div>
+          <div class="info info--green">
+            <dt>Lab Engineer</dt>
+            <dd>Engr. Ayesha Asif</dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- Student credentials -->
+      <section class="card credentials" aria-labelledby="cred-title">
+        <h2 id="cred-title" class="section-title">Student Credentials</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">CMS</th>
+                <th scope="col">Section</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Muhammad Abdullah Nadeem</td>
+                <td>504853</td>
+                <td>BESE 15-B</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Call to action -->
+      <section class="cta" aria-labelledby="cta-title">
+        <h2 id="cta-title" class="cta__title">See the Animations</h2>
+        <p class="cta__text">Press the button below to see the animations.</p>
+        <a class="cta__button" href="animations.html">
+          <span>Animations Gallery</span>
+          <svg class="cta__arrow" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </section>
+
+    </main>
+
+    <footer class="sheet-footer">
+      <span>SE-344: Web Engineering</span>
+      <span>Lab 4</span>
+    </footer>
+
+  </div>
+
+</body>
+</html>
